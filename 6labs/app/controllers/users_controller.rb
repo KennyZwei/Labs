@@ -8,6 +8,8 @@ class UsersController < ApplicationController
 
   # GET /users/1 or /users/1.json
   def show
+    @user = User.find(params[:id])
+    debugger
   end
 
   # GET /users/new
@@ -27,6 +29,9 @@ class UsersController < ApplicationController
       if @user.save
         format.html { redirect_to user_url(@user), notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
+        flash[:success] = "Welcome to the Sample App!"
+        redirect_to @user
+
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
