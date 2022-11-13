@@ -52,4 +52,22 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_equal name,  @user.name
     assert_equal email, @user.email
   end
+
+  test "repeat forwarding" do
+    get edit_user_path(@user)
+    post login_path, params: { session: { email:       @user.email,
+                                          password:    'password',
+                                          remember_me: '0' } }
+    assert_redirected_to edit_user_path(@user)
+    name  = "Foo Bar"
+    email = "foo@bar.com"
+    patch user_path(@user), params: { user: { name:  name,
+                                              email: email,
+                                              password:              "",
+                                              password_confirmation: "" } }
+    post login_path, params: { session: { email:       @user.email,
+                                          password:    'password',
+                                          remember_me: '0' } }
+    assert_nil session[:forwarding_url]
+  end
 end
